@@ -1,27 +1,24 @@
-// backend/middleware/auth.js
-
 import jwt from "jsonwebtoken";
 
-const verifyToken = (req, res, next) => {
-    const authHeader = req.headers.authorization;
+const secretkey = process.env.JWT_SECRET_KEY;
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-        return res.status(401).json({ success: false, message: "Unauthorized: No token" });
+export default function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token)
+    return res
+      .status(401)
+      .json({ message: "unauthorized user, please login first" });
+
+  jwt.verify(token, secretkey, (err, userId) => {
+    if (err) {
+      console.log(err);
+      return res
+        .status(403)
+        .json({ message: "Invalid Credential, please login" });
     }
-
-    const token = authHeader.split(" ")[1];
-
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET); // ✅ .env থেকে secret নিচ্ছে?
-        req.userId = decoded.userId; // ✅ এই লাইন আছে তো?
-        next();
-    } catch (err) {
-        console.error("JWT verification failed:", err);
-        return res.status(401).json({ success: false, message: "Unauthorized: Invalid token" });
-    }
-};
-
-export default verifyToken;
-
-
-
+    req.userId = userId;
+    next();
+  });
+}

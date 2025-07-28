@@ -1,7 +1,8 @@
-'use client';
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/components/api";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -13,13 +14,13 @@ export default function LoginPage() {
       const res = await api.post("/auth/login", { email, password });
       if (res.data.success) {
         sessionStorage.setItem("token", res.data.token);
-        alert("Login successful");
-        router.push("/home"); // if login successful then home page
+        toast.success("Login successful!");
+        router.push("/home");
       } else {
-        alert(res.data.message);
+        toast.error(res.data.message);
       }
     } catch (err) {
-      alert("Login failed");
+      toast.error("Login failed. Please try again.");
       console.error(err);
     }
   };
@@ -27,10 +28,14 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4">
       <h1 className="text-4xl font-extrabold text-blue-600 mb-2">BlogPoint</h1>
-      <p className="text-gray-500 mb-8 text-sm">Welcome back! Please log in to continue.</p>
+      <p className="text-gray-500 mb-8 text-sm">
+        Welcome back! Please log in to continue.
+      </p>
 
       <div className="w-full max-w-md bg-white p-6 rounded-xl shadow-md">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Login</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+          Login
+        </h2>
         <input
           type="email"
           placeholder="Email"
@@ -53,7 +58,7 @@ export default function LoginPage() {
         </button>
 
         <p className="text-sm text-center text-gray-600 mt-4">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <span
             className="text-blue-500 cursor-pointer hover:underline"
             onClick={() => router.push("/signup")}

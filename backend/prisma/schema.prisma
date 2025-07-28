@@ -8,18 +8,18 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
+  id       String @id @default(cuid())
+  email    String @unique
   password String
 
-  posts    Post[]  // ✅ এই লাইনটা missing ছিল, এটি add করতেই হবে
+  posts Post[]
 }
 
 model Post {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(cuid())
   content   String
   createdAt DateTime @default(now())
 
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
 }
