@@ -1,48 +1,54 @@
 'use client';
-import Navbar from "@/components/Navbar";
+
 import { useState } from "react";
+import api from "@/components/api";
+import { useRouter } from "next/navigation";
+import Navbar from "@/components/Navbar";
 
 export default function AddPage() {
-    const [postContent, setPostContent] = useState("");
+    const [content, setContent] = useState("");
+    const router = useRouter();
 
-    const handleCheck = () => {
-        alert("Checking grammar with Gemini... (Demo)");
-    };
+    const handlePost = async () => {
+        const token = sessionStorage.getItem("token");
 
-    const handlePost = () => {
-        alert("Post added to home page! (Demo)");
+        if (!token) {
+            console.error("No token found in sessionStorage");
+            return;
+        }
+
+        try {
+            await api.post("/user/add", { content }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            router.push("/home");
+        } catch (err) {
+            console.error("Post failed", err);
+        }
     };
 
     return (
-        <>
+        <div>
             <Navbar />
-            <div className="max-w-3xl mx-auto px-4 py-10">
-                <h2 className="text-2xl font-bold mb-6 text-gray-800 border-l-4 pl-3 border-green-500">
-                    Add Your Post
-                </h2>
-
+            <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
+                <h2 className="text-2xl font-bold mb-4 text-center">Add Your Blog</h2>
                 <textarea
-                    className="w-full h-48 p-4 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-400 resize-none text-gray-700"
+                    value={content}
+                    onChange={(e) => setContent(e.target.value)}
+                    className="w-full h-40 p-3 border border-gray-300 rounded-md mb-4 resize-none"
                     placeholder="Write your blog here..."
-                    value={postContent}
-                    onChange={(e) => setPostContent(e.target.value)}
-                ></textarea>
-
-                <div className="flex justify-end gap-4 mt-4">
-                    <button
-                        className="px-5 py-2 text-sm bg-yellow-500 text-white rounded-md hover:bg-yellow-600 transition"
-                        onClick={handleCheck}
-                    >
-                        Check
-                    </button>
-                    <button
-                        className="px-5 py-2 text-sm bg-green-500 text-white rounded-md hover:bg-green-600 transition"
-                        onClick={handlePost}
-                    >
-                        Post
-                    </button>
-                </div>
+                />
+                <button
+                    onClick={handlePost}
+                    className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
+                >
+                    Post
+                </button>
             </div>
-        </>
+        </div>
     );
 }
+

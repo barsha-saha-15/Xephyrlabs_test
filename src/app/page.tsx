@@ -14,7 +14,7 @@ export default function LoginPage() {
       if (res.data.success) {
         sessionStorage.setItem("token", res.data.token);
         alert("Login successful");
-        router.push("/home"); // Login সফল হলে home page এ পাঠাবে
+        router.push("/home"); // if login successful then home page
       } else {
         alert(res.data.message);
       }
