@@ -1,14 +1,27 @@
 'use client';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import api from "@/components/api";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const handleLogin = () => {
-    alert("Login clicked (Demo)");
+  const handleLogin = async () => {
+    try {
+      const res = await api.post("/auth/login", { email, password });
+      if (res.data.success) {
+        sessionStorage.setItem("token", res.data.token);
+        alert("Login successful");
+        router.push("/home"); // Login সফল হলে home page এ পাঠাবে
+      } else {
+        alert(res.data.message);
+      }
+    } catch (err) {
+      alert("Login failed");
+      console.error(err);
+    }
   };
 
   return (
@@ -21,20 +34,20 @@ export default function LoginPage() {
         <input
           type="email"
           placeholder="Email"
-          className="w-full mb-4 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full mb-4 px-4 py-2 border rounded-md"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <input
           type="password"
           placeholder="Password"
-          className="w-full mb-4 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="w-full mb-4 px-4 py-2 border rounded-md"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
         <button
           onClick={handleLogin}
-          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition"
+          className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600"
         >
           Login
         </button>

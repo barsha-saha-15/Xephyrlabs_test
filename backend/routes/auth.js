@@ -1,19 +1,20 @@
-import express from "express";
-import { PrismaClient } from "@prisma/client";
-import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+import express from 'express';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
-dotenv.config();
+dotenv.config(); //
+
 const router = express.Router();
 const prisma = new PrismaClient();
 const SECRET = process.env.JWT_SECRET_KEY;
 
-// Signup
-router.post("/login", async (req, res) => {
+router.post('/register', async (req, res) => {
     try {
         const { email, password } = req.body;
-        exists = await prisma.user.findUnique({ where: { email } });
+        const exists = await prisma.user.findUnique({ where: { email } });
+
         if (exists)
             return res
                 .status(400)
@@ -31,7 +32,6 @@ router.post("/login", async (req, res) => {
             message: "user register successful",
             data: user,
         });
-
     } catch (err) {
         console.error("error during rejistration", err);
         return res.status(500)
@@ -39,11 +39,9 @@ router.post("/login", async (req, res) => {
                 success: false,
                 message: "server internal problem,please try later",
             });
-
     }
-})
+});
 
-// Login
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
