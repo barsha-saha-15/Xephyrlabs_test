@@ -194,7 +194,6 @@ DELETE /user/delete/:id
 -  AI-based title suggestion
 -  Blog search feature
 -  Comments and Likes
--  Full mobile responsiveness
 -  Draft-saving and scheduled posting
 
 ---
@@ -231,7 +230,6 @@ Here are some advanced features that can be added to improve **Blogpoint**:
 - *User profile pages** with profile picture and bio
 - *Rich text editor** with formatting options (bold, italic, code blocks, etc.)
 - *Post scheduling & drafts**
-- *Fully mobile-responsive design**
 - *Notifications** for post interactions
 - *Analytics Dashboard** for authors (views, likes, comments)
 - *Image/file upload** with blog posts
