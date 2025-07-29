@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import api from "@/components/api";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import toast from "react-hot-toast";
 
 export default function AddPage() {
   const [content, setContent] = useState("");
@@ -36,14 +37,40 @@ export default function AddPage() {
       );
 
       if (res.data.success) {
-        alert("Blog posted successfully!");
+        toast.success("Blog posted successfully!");
         router.push("/home");
       } else {
-        alert("Failed to post blog. Please try again.");
+        toast.error("Failed to post blog. Please try again.");
       }
     } catch (err) {
       console.error("Post failed", err);
-      alert("Internal Problem. Please try again later.");
+      toast.error("Internal Problem. Please try again later.");
+    }
+  };
+
+  const handleCheckGrammar = async () => {
+    const sessionToken = sessionStorage.getItem("token");
+    try {
+      const res = await api.post(
+        "/user/checkGrammar",
+        { content },
+        {
+          headers: {
+            authorization: `Bearer ${sessionToken}`,
+          },
+        }
+      );
+      if (res.data.success) {
+        setContent(res.data?.corrected || "");
+        toast.success(
+          "Your written content is corrected, Please check it out!"
+        );
+      } else {
+        toast.error(res.data.message || "Grammar errors found.");
+      }
+    } catch (err) {
+      toast.error("Failed to check grammar.");
+      console.error("Grammar check error:", err);
     }
   };
 
@@ -58,6 +85,12 @@ export default function AddPage() {
           className="w-full h-40 p-3 border border-gray-300 rounded-md mb-4 resize-none"
           placeholder="Write your blog here..."
         />
+        <button
+          onClick={handleCheckGrammar}
+          className="w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-400 mb-2"
+        >
+          Correct Grammar
+        </button>
         <button
           onClick={handlePost}
           className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"

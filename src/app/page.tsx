@@ -14,10 +14,9 @@ export default function LoginPage() {
       const res = await api.post("/auth/login", { email, password });
       if (res.data.success) {
         sessionStorage.setItem("token", res.data.token);
-        toast.success("Login successful!");
         router.push("/home");
       } else {
-        toast.error(res.data.message);
+        toast.error("Invalid email or password.");
       }
     } catch (err) {
       toast.error("Login failed. Please try again.");

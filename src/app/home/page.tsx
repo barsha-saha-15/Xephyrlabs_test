@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import api from "@/components/api";
 import { useRouter } from "next/navigation";
 import Navbar from "@/components/Navbar";
+import toast from "react-hot-toast";
 
 interface Blog {
   id: string;
@@ -37,6 +38,7 @@ export default function HomePage() {
       }
     } catch (err) {
       console.error("Error fetching posts:", err);
+      toast.error("Posts could not be fetched. Please try again later.");
     }
   };
 
@@ -53,8 +55,8 @@ export default function HomePage() {
     }
   };
 
-  const handleUpdate = (id: string, content: string) => {
-    router.push(`/update?id=${id}&content=${encodeURIComponent(content)}`);
+  const handleUpdate = (id: string) => {
+    router.push(`/update/${id}`);
   };
 
   return (
@@ -62,9 +64,9 @@ export default function HomePage() {
       <Navbar />
 
       <div className="max-w-3xl mx-auto mt-10 px-4">
-        <h1 className="text-3xl font-bold mb-6 text-center text-gray-800">
-          Your All Posts
-        </h1>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6 border-l-4 pl-3 border-purple-500">
+          My Blogs
+        </h2>
 
         {posts.length === 0 ? (
           <p className="text-center text-gray-500">No posts yet.</p>
@@ -79,7 +81,7 @@ export default function HomePage() {
               </p>
               <div className="flex justify-end space-x-4">
                 <button
-                  onClick={() => handleUpdate(post.id, post.content)}
+                  onClick={() => handleUpdate(post.id)}
                   className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-yellow-500"
                 >
                   Update

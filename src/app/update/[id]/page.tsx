@@ -1,9 +1,10 @@
 "use client";
 
+import api from "@/components/api";
 import Navbar from "@/components/Navbar";
-import axios from "axios";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function UpdatePage() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function UpdatePage() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const sessionToken = sessionStorage.getItem("access_key");
+    const sessionToken = sessionStorage.getItem("token");
 
     if (!sessionToken) {
       router.push("/");
@@ -29,13 +30,11 @@ export default function UpdatePage() {
 
     const fetchPost = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/singlePost/${id}`, {
+        const res = await api.get(`/user/singlePost/${id}`, {
           headers: {
             authorization: `Bearer ${sessionToken}`,
           },
         });
-
-        console.log("Fetched post:", res.data.post);
         setContent(res.data.post?.content || "");
       } catch (err) {
         console.error("Error fetching post:", err);
@@ -49,11 +48,11 @@ export default function UpdatePage() {
   }, [id, router]);
 
   const handleUpdate = async () => {
-    const sessionToken = sessionStorage.getItem("access_key");
+    const sessionToken = sessionStorage.getItem("token"); // use the same key as in fetch
 
     try {
-      const res = await axios.put(
-        `http://localhost:5000/updateposts/${id}`,
+      const res = await api.put(
+        `/user/update/${id}`,
         { content },
         {
           headers: {
@@ -63,6 +62,7 @@ export default function UpdatePage() {
       );
 
       if (res.data.success) {
+        toast.success("Post updated successfully");
         router.replace("/home");
       }
     } catch (err) {
@@ -71,10 +71,36 @@ export default function UpdatePage() {
     }
   };
 
+  const handleCheckGrammar = async () => {
+    const sessionToken = sessionStorage.getItem("token");
+    try {
+      const res = await api.post(
+        "/user/checkGrammar",
+        { content },
+        {
+          headers: {
+            authorization: `Bearer ${sessionToken}`,
+          },
+        }
+      );
+      if (res.data.success) {
+        setContent(res.data?.corrected || "");
+        toast.success(
+          "Your written content is corrected, Please check it out!"
+        );
+      } else {
+        toast.error(res.data.message || "Grammar errors found.");
+      }
+    } catch (err) {
+      toast.error("Failed to check grammar.");
+      console.error("Grammar check error:", err);
+    }
+  };
+
   return (
     <div>
       <Navbar />
-      <div className="max-w-md mx-auto mt-16 bg-white p-6 rounded-xl shadow-md">
+      <div className="max-w-2xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-md">
         <p className="mb-2 font-semibold text-lg">Update Your Blog</p>
         {loading ? (
           <p>Loading...</p>
@@ -89,8 +115,14 @@ export default function UpdatePage() {
               className="border p-2 w-full mb-2 rounded h-40 resize-none"
             />
             <button
+              onClick={handleCheckGrammar}
+              className="w-full bg-gray-600 text-white py-2 rounded hover:bg-gray-400 mb-2"
+            >
+              Correct Grammar
+            </button>
+            <button
               onClick={handleUpdate}
-              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+              className="bg-blue-600 w-full text-white px-4 py-2 rounded hover:bg-blue-700"
             >
               Update
             </button>
@@ -100,4 +132,3 @@ export default function UpdatePage() {
     </div>
   );
 }
-

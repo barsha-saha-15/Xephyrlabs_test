@@ -13,7 +13,7 @@ export default function SignupPage() {
     try {
       const res = await api.post("/auth/register", { email, password });
       if (res.data.success) {
-        toast.success("Signup successful. Please login.");
+        toast.success("Signup successful.");
         router.push("/");
       } else {
         toast.error(res.data.message);
