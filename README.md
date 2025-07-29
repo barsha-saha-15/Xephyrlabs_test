@@ -1,36 +1,248 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+#  Blogpoint
 
-First, run the development server:
+**Blogpoint** is a full-stack blogging platform where users can write blog posts, check grammar using **Gemini AI**, and publish them. Users can also view and manage their own blogs, see all public blogs from others, and perform secure authentication using JWT. The project is built with **Next.js**, **Tailwind CSS**, **Express.js**, **Prisma**, and **PostgreSQL (via pgAdmin 4)**.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+##  What You Can Do with Blogpoint
+
+-  Write blog posts using a rich editor
+-  Fix grammar using **Gemini AI**
+-  Securely sign up / log in
+-  View your own blog posts
+-  Browse all users’ blogs
+-  Update or  delete your own posts
+-  Logout securely
+
+---
+
+##  Project Setup
+
+###  Prerequisites
+
+Ensure the following are installed:
+
+- **Node.js**: v18 or higher
+- **PostgreSQL** (use **pgAdmin 4** for GUI)
+- **npm** or **yarn**
+- **Gemini API key** (for grammar correction)
+
+---
+
+###  Project Structure
+
+```
+blogpoint/
+├── backend/         # Express + Prisma + JWT + PostgreSQL
+├── frontend/        # Next.js + Tailwind CSS
+└── README.md
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🔄 Clone the Repository
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+git clone https://github.com/barsha-saha-15/Xephyrlabs_test
+```
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ▶ How to Run Locally
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+###  Frontend (Next.js + Tailwind CSS)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-## Deploy on Vercel
+Runs at: `http://localhost:3000`
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+###  Backend (Express.js + Prisma + pgAdmin4)
+
+```bash
+cd backend
+npm install
+
+# Configure .env file:
+DATABASE_URL="postgresql://postgres:12345@localhost:5432/Blog?schema=public"
+JWT_SECRET=qwe123
+GEMINI_API_KEY=AIzaSyAtMLM22XomJgTnvMITGet2ShAFvOaLdQM
+
+# Prisma setup
+npx prisma generate
+npx prisma migrate dev --name userModel init
+
+# Start server
+npm run dev
+```
+
+Runs at: `http://localhost:5000`
+
+---
+
+##  Authentication
+
+- Used **JWT token**
+- Stored on **sessionStorage**
+- Auth middleware used to protect private routes
+
+---
+
+##  API Endpoints & Examples
+
+> All protected routes require:  
+`Authorization: Bearer <JWT_TOKEN>`  
+`Content-Type: application/json`
+
+### Signup
+
+```bash
+POST /auth/register
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+###  Login
+
+```bash
+POST /auth/login
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+---
+
+###  Add Blog Post
+
+```bash
+POST /user/add
+{
+  "content": "Blog content here..."
+}
+```
+
+###  Grammar Check with Gemini
+
+```bash
+POST /user/check
+{
+  "content": "your raw blog text"
+}
+```
+
+###  Get Your Posts
+
+```bash
+GET /user/home
+```
+
+###  Get All Users’ Posts
+
+```bash
+GET /user/allPost
+```
+
+###  Update a Post
+
+```bash
+PUT /user/update/:id
+{
+  "content": "updated blog content"
+}
+```
+
+###  Delete a Post
+
+```bash
+DELETE /user/delete/:id
+```
+
+---
+
+##  Main Pages (Frontend)
+
+| Page        | Route         | Description                                                  |
+|-------------|---------------|--------------------------------------------------------------|
+| **Login**   | `/login`      | User login page                                              |
+| **Signup**  | `/register`     | Create new account                                           |
+| **Add**     | `/add`        | Write blog, check grammar, and post                         |
+| **Home**    | `/home`           | See your own posts                                           |
+| **Showcase**| `/showcase`   | See all users' blogs                                         |
+| **Update**  | `/update/:id` | Update a specific blog post                                  |
+| **Logout**  | -             | Clears session and redirects to login                       |
+
+---
+
+##  Deployment Info
+
+| Layer     | Platform          |
+|-----------|-------------------|
+| Frontend  | [Vercel](https://vercel.com/)       |
+| Backend   | [Render](https://render.com/) or [Railway](https://railway.app/) |
+| Database  | PostgreSQL (managed locally with **pgAdmin 4**) |
+
+---
+
+##  Future Enhancements
+
+-  AI-based title suggestion
+-  Blog search feature
+-  Comments and Likes
+-  Bangla-English multi-language support
+-  Full mobile responsiveness
+-  Draft-saving and scheduled posting
+
+---
+
+## Tech Stack
+
+| Layer        | Technologies                         |
+|--------------|--------------------------------------|
+| Frontend     | Next.js, Tailwind CSS, Axios         |
+| Backend      | Express.js, Prisma ORM               |
+| Auth         | JWT + bcrypt                         |
+| Grammar Fix  | Gemini AI                            |
+| DB           | PostgreSQL (via pgAdmin 4)           |
+| Deployment   | Vercel (FE) + Render/Railway (BE)    |
+
+---
+
+## Contact
+
+Feel free to connect with me:
+
+-  Email: barshasaha222@gmail.com
+-  GitHub: [barsha saha](https://github.com/barsha-saha-15)
+-  LinkedIn: [Your Name](https://www.linkedin.com/in/barsha-saha-1a81932a2?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)
+
+---
+
+---
+
+##  Future Enhancements
+
+Here are some advanced features that can be added to improve **Blogpoint**:
+
+- *AI-based title & summary generation** using Gemini
+- *Like, comment, and reply system**
+- *User profile pages** with profile picture and bio
+- *Rich text editor** with formatting options (bold, italic, code blocks, etc.)
+- *Post scheduling & drafts**
+- *Fully mobile-responsive design**
+- *Multi-language support** (Bangla, English)
+- *Notifications** for post interactions
+- *Analytics Dashboard** for authors (views, likes, comments)
+- *Image/file upload** with blog posts
+- *Dark mode / Light mode** toggle
+
+---
+
