@@ -24,7 +24,7 @@ Ensure the following are installed:
 
 - **Node.js**: v18 or higher
 - **PostgreSQL** (use **pgAdmin 4** for GUI)
-- **npm** or **yarn**
+- **npm** 
 - **Gemini API key** (for grammar correction)
 
 ---
@@ -69,9 +69,9 @@ cd backend
 npm install
 
 # Configure .env file:
-DATABASE_URL="postgresql://postgres:12345@localhost:5432/Blog?schema=public"
-JWT_SECRET=qwe123
-GEMINI_API_KEY=AIzaSyAtMLM22XomJgTnvMITGet2ShAFvOaLdQM
+DATABASE_URL="Your_Key"
+JWT_SECRET=your_key
+GEMINI_API_KEY=your_key
 
 # Prisma setup
 npx prisma generate
@@ -181,23 +181,19 @@ DELETE /user/delete/:id
 | **Logout**  | -             | Clears session and redirects to login                       |
 
 ---
+## Deployment Info
 
-##  Deployment Info
-
-| Layer     | Platform          |
-|-----------|-------------------|
-| Frontend  | [Vercel](https://vercel.com/)       |
-| Backend   | [Render](https://render.com/) or [Railway](https://railway.app/) |
-| Database  | PostgreSQL (managed locally with **pgAdmin 4**) |
-
+| Layer     | Platform                                  |
+|-----------|-------------------------------------------|
+| Frontend  | [Vercel](https://xephyrlabs-test.vercel.app/)             |
+| Backend   | [Render]            |
+| Database  | [Supabase]    |
 ---
-
 ##  Future Enhancements
 
 -  AI-based title suggestion
 -  Blog search feature
 -  Comments and Likes
--  Bangla-English multi-language support
 -  Full mobile responsiveness
 -  Draft-saving and scheduled posting
 
@@ -212,7 +208,7 @@ DELETE /user/delete/:id
 | Auth         | JWT + bcrypt                         |
 | Grammar Fix  | Gemini AI                            |
 | DB           | PostgreSQL (via pgAdmin 4)           |
-| Deployment   | Vercel (FE) + Render/Railway (BE)    |
+| Deployment   | Vercel (FE) + Render   |
 
 ---
 
@@ -226,8 +222,6 @@ Feel free to connect with me:
 
 ---
 
----
-
 ##  Future Enhancements
 
 Here are some advanced features that can be added to improve **Blogpoint**:
@@ -238,11 +232,8 @@ Here are some advanced features that can be added to improve **Blogpoint**:
 - *Rich text editor** with formatting options (bold, italic, code blocks, etc.)
 - *Post scheduling & drafts**
 - *Fully mobile-responsive design**
-- *Multi-language support** (Bangla, English)
 - *Notifications** for post interactions
 - *Analytics Dashboard** for authors (views, likes, comments)
 - *Image/file upload** with blog posts
-- *Dark mode / Light mode** toggle
 
 ---
-
